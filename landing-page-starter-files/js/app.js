@@ -46,8 +46,8 @@ function generateNavItems() {     //this function creates navBarItems depending 
   for (let i = 0; i < sections.length; i++) {
 
     const navBarItem = document.createElement('li');
-    navBarItem.setAttribute('class', 'menu__link');
-    navBarItem.innerHTML = `<a href = '#${sections[i].id}'>${sections[i].dataset.nav}</a>`;  //sets id to sections[i].id and sets that equal to href
+    navBarItem.setAttribute('class', `menu__link`);
+    navBarItem.innerHTML = `<a data-scroll = section${[i+1]} href = '#${sections[i].id}'>${sections[i].dataset.nav}</a>`;  //sets id to sections[i].id and sets that equal to href
     fragment.appendChild(navBarItem);
 
   }
@@ -67,39 +67,6 @@ generateNavItems();
 
 // build the nav
 
-
-// Add class 'active' to section when near top of viewport
-  // section1.getBoundingClientRect().top //returns number of pixels from the top of viewport for section1
-  // section1.classList.toggle('your-active-class');  //adds class your-active-class to element and removes if exists
-  //need eventlistener that fires on a scroll, that compares the location of element to the top of viewport
-  //if the element.top is from 0 to negative section1.getBoundingClientRect().height (above view) then set class = your-active-class
-  //if class is your-active-class then display menu item in large band across the top or highlight it in a new color on navbar
-//working version below
-// document.addEventListener('scroll', function() {
-//   const sections = document.querySelectorAll('section');
-//   const navBarItems = document.querySelectorAll('.menu__link');
-//    //maybe add count to help track what section, then update navBarItems with count
-//
-//
-//    sections.forEach(function(section) {
-//
-//
-//     if (section.getBoundingClientRect().top <= 0 &&
-//       section.getBoundingClientRect().top >= section.getBoundingClientRect().height*(-1)) {
-//
-//         section.classList.add('your-active-class');
-//         navBarItems[count].classList.add('active');
-//
-//
-//       } else section.classList.remove('your-active-class');
-//               navBarItems[count].classList.remove('active');
-//
-//           }
-//         )
-//       }
-//     )
-
-//test version
 
 document.addEventListener('scroll', function() {
   const sections = document.querySelectorAll('section');
@@ -141,14 +108,43 @@ document.addEventListener('scroll', function() {
  *
 */
 
+
 // Build menu
 
 // Scroll to section on link click
+//when i click on the element in the navbar I want to scroll to the cooresponding element down the page
 function navClickListener(){
-  navBarList.addEventListener('click', function(e){
-    console.log(`${e.target}`)
-  });
+  const navBarList = document.querySelector('#navbar__list');
+
+  navBarList.addEventListener('click', function(e){ //this code here is a pain in my ass...
+//there has got to be a less absurd way to scroll to element down page using href but modifying scroll characteristics (location of element after scroll etc)
+//the code below- i basically added a data-scroll attribute to each <li>'s anchor tag <a data-scroll = section[i+1] (in navBar generator code)
+//then i used this string which gets returned from e.target.dataset.scroll and snuck it into document.querySelector while searching for id with that value
+//this is only way i could think to link each section to navbar item so that i could customize the scrolling behavior
+//since the href anchor tag automatically scrolls elements so the top border matches top of viewport...is there a way to just customize default anchor scroll behavior?
+    let scrollTarget = undefined;
+    e.preventDefault();
+    if (e.target.nodeName === 'A') {
+
+      scrollTarget = document.querySelector(`#${e.target.dataset.scroll}`);
+      scrollTarget.scrollIntoView({behavior: 'smooth', block: 'end'});
+    }
+    //get the text content of whatever is clicked 'section1' = variable
+    //then have that go into #
+
+
+
+    // e.target.scrollIntoView({behavior: "smooth", block: "end"})
+  })
+
+
 }
+//data-scroll = section[i+1]
+
+
+
+    // e.target.scrollIntoView({behavior: "smooth", block: 'end'});
+
 navClickListener();
 
 
