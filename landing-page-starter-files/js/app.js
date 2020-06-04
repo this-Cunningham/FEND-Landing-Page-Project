@@ -19,9 +19,8 @@
 */
 const navBarMenu = document.querySelector('.navbar__menu');
 const navBarList = document.querySelector('#navbar__list');
-const section1 = document.querySelector('#section1');
-const section2 = document.querySelector('#section2');
-const section3 = document.querySelector('#section3');
+const main = document.querySelector('main');
+
 // const sections = document.querySelectorAll('.landing__container');
 // const sections = document.querySelectorAll('section');
 
@@ -55,61 +54,6 @@ function generateNavItems() {     //this function creates navBarItems depending 
   navBarList.appendChild(fragment);
 }
 
-generateNavItems();
-
-
-/**
- * End Helper Functions
- * Begin Main Functions
- *
-*/
-
-
-// build the nav
-
-
-document.addEventListener('scroll', function() {
-  const sections = document.querySelectorAll('section');
-  const navBarItems = document.querySelectorAll('.menu__link');
-
-
-  let sectionsArray = [];
-  sections.forEach(function(section){
-    sectionsArray.push(section);
-  })
-
-
-   sectionsArray.forEach(function(section, index) {
-
-
-    if (section.getBoundingClientRect().top <= navBarList.getBoundingClientRect().height &&
-      section.getBoundingClientRect().top >= section.getBoundingClientRect().height*(-1)+navBarList.getBoundingClientRect().height) {
-
-        section.classList.add('your-active-class');
-        navBarItems[index].classList.add('active-nav');
-
-
-      } else {section.classList.remove('your-active-class');
-              navBarItems[index].classList.remove('active-nav');
-            }
-          }
-        )
-      }
-    )
-
-
-// Scroll to anchor ID using scrollTO event
-
-
-
-/**
- * End Main Functions
- * Begin Events
- *
-*/
-
-
-// Build menu
 
 // Scroll to section on link click
 //when i click on the element in the navbar I want to scroll to the cooresponding element down the page
@@ -131,21 +75,82 @@ function navClickListener(){
     }
     //get the text content of whatever is clicked 'section1' = variable
     //then have that go into #
-
-
-
-    // e.target.scrollIntoView({behavior: "smooth", block: "end"})
   })
+}
+
+
+
+//Create New Section Function
+function newSectionCreator(){
+  const section = document.createElement('section');
+  const div = document.createElement('div');
+  const h2 = document.createElement('h2');
+  const p = document.createElement('p');
 
 
 }
+
+document.addEventListener('scroll', function() {
+  const sections = document.querySelectorAll('section');
+  const navBarItems = document.querySelectorAll('.menu__link');
+
+  let sectionsArray = [];
+  sections.forEach(function(section){
+    sectionsArray.push(section);
+  })
+
+   sectionsArray.forEach(function(section, index) {
+
+    if (section.getBoundingClientRect().top <= navBarList.getBoundingClientRect().height &&
+      section.getBoundingClientRect().top >= section.getBoundingClientRect().height*(-1)+navBarList.getBoundingClientRect().height) {
+
+        section.classList.add('your-active-class');
+        navBarItems[index].classList.add('active-nav');
+
+      } else {section.classList.remove('your-active-class');
+              navBarItems[index].classList.remove('active-nav');
+            }
+          }
+        )
+      }
+    )
+
+
+generateNavItems();
+navClickListener();
 //data-scroll = section[i+1]
 
 
+const createSection = (content) => {
+  const sections = document.querySelectorAll('section');
+  const newSection = document.createElement('section');
 
-    // e.target.scrollIntoView({behavior: "smooth", block: 'end'});
+  newSection.setAttribute('id', `section${sections.length+1}`);
+  newSection.setAttribute('data-nav', `Section ${sections.length+1}`);
+  newSection.innerHTML = sectionStructurer(sections.length+1, content);
 
-navClickListener();
+  return newSection;
+}
 
+
+const sectionStructurer = (sectionNumber, text) => {
+
+  return `<div class = "landing__container">
+          <h2>Section ${sectionNumber}</h2>
+          <p>${text}</p>
+          <p></p>
+          </div>
+          </section>`
+}
+
+const addSection = (content) => {
+  main.appendChild(createSection(content));
+  generateNavItems();
+}
+
+document.getElementById('generateSection').addEventListener('click', function(e, content){
+  addSection(content);
+
+})
 
 // Set sections as active
